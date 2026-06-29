@@ -45,3 +45,11 @@ frontend/.env.local
 piston_data/
 backend/piston_data/
 **/piston_data/
+
+# Local test and utility scripts
+backend/test-*.js
+backend/verify-*.js
+backend/list-*.js
+**/test-*.js
+**/verify-*.js
+**/list-*.js
