@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand theme overrides mapped to Oxford Navy, Royal Blue, Steel Blue, and Cyan */
+  --color-primary: #43bccd;
+  --color-primary-hover: #552a82;
+  --color-success: #ffd60a;
+  --color-warning: #552a82;
+  --color-error: #43bccd;
+  --color-navy-dark: #391c57;
+  --color-navy-light: #552a82;
+
+  /* Global Color mapping overrides to map standard colors to theme palette */
+  --color-indigo-50: #f4f8fa;
+  --color-indigo-100: #ffd60a;
+  --color-indigo-200: #43bccd;
+  --color-indigo-300: #f86624;
+  --color-indigo-400: #7e929d;
+  --color-indigo-500: #43bccd;
+  --color-indigo-600: #552a82;
+  --color-indigo-700: #391c57;
+  --color-indigo-800: #211033;
+  --color-indigo-900: #150a21;
+
+  --color-blue-50: #f4f8fa;
+  --color-blue-100: #ffd60a;
+  --color-blue-200: #43bccd;
+  --color-blue-300: #f86624;
+  --color-blue-400: #7e929d;
+  --color-blue-500: #43bccd;
+  --color-blue-600: #552a82;
+  --color-blue-700: #391c57;
+  --color-blue-800: #211033;
+  --color-blue-900: #150a21;
+
+  --color-cyan-50: #f4f8fa;
+  --color-cyan-100: #ffd60a;
+  --color-cyan-200: #43bccd;
+  --color-cyan-300: #f86624;
+  --color-cyan-400: #7e929d;
+  --color-cyan-500: #ffd60a;
+  --color-cyan-600: #43bccd;
+  --color-cyan-700: #f86624;
+  --color-cyan-800: #552a82;
+  --color-cyan-900: #391c57;
+
+  --color-violet-50: #f4f8fa;
+  --color-violet-100: #ffd60a;
+  --color-violet-200: #43bccd;
+  --color-violet-300: #f86624;
+  --color-violet-400: #7e929d;
+  --color-violet-500: #43bccd;
+  --color-violet-600: #552a82;
+  --color-violet-700: #391c57;
+  --color-violet-800: #211033;
+  --color-violet-900: #150a21;
+
+  --color-emerald-50: #f4f8fa;
+  --color-emerald-100: #ffd60a;
+  --color-emerald-200: #43bccd;
+  --color-emerald-300: #f86624;
+  --color-emerald-400: #7e929d;
+  --color-emerald-500: #ffd60a;
+  --color-emerald-600: #43bccd;
+
+  --color-green-50: #f4f8fa;
+  --color-green-100: #ffd60a;
+  --color-green-200: #43bccd;
+  --color-green-300: #f86624;
+  --color-green-400: #7e929d;
+  --color-green-500: #ffd60a;
+  --color-green-600: #43bccd;
+
+  --color-rose-50: #f4f8fa;
+  --color-rose-100: #ffd60a;
+  --color-rose-200: #43bccd;
+  --color-rose-300: #f86624;
+  --color-rose-400: #7e929d;
+  --color-rose-500: #43bccd;
+  --color-rose-600: #552a82;
+
+  --color-amber-50: #f4f8fa;
+  --color-amber-100: #ffd60a;
+  --color-amber-200: #43bccd;
+  --color-amber-300: #f86624;
+  --color-amber-400: #7e929d;
+  --color-amber-500: #ffd60a;
+  --color-amber-600: #43bccd;
+}
+
+:root {
+  --background: #150a21;
+  --foreground: #FFFFFF;
+  --card: #2b1542;
+  --card-foreground: #FFFFFF;
+  --border: #552a82;
+  --radius: 0.5rem;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+.glass-panel {
+  background: rgba(43, 21, 66, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(67, 188, 205, 0.35);
+}
+
+.glass-panel-dark {
+  background: rgba(21, 10, 33, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(67, 188, 205, 0.25);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #150a21;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #552a82;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffd60a;
+}
+
+/* Pulse keyframes for loaders */
+@keyframes soft-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ── LIGHT MODE STYLING OVERRIDES (Strict Black & White) ── */
+.light-theme {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --border: #000000;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Force layout canvas backgrounds to pure white */
+.light-theme main,
+.light-theme main .bg-\[\#150a21\],
+.light-theme main .bg-\[\#211033\],
+.light-theme main .bg-\[\#150a21\]\/80,
+.light-theme main .bg-\[\#211033\]\/60,
+.light-theme main .bg-gradient-to-r,
+.light-theme main .bg-gradient-to-br,
+.light-theme main .bg-gradient-to-tr,
+.light-theme main .bg-gradient-to-b {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+/* Clean, blank white cards and glassmorphism elements */
+.light-theme main [class*="bg-[#"],
+.light-theme main .glass-panel,
+.light-theme main .glass-panel-dark {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #000000 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  color: #000000 !important;
+}
+
+/* Interactive Card Flip Hover Effect: lift, rotate/tilt, and color-invert! */
+.light-theme main [class*="bg-[#"]:not(.no-hover-effect) {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease !important;
+}
+
+.light-theme main [class*="bg-[#"]:not(.no-hover-effect):hover,
+.light-theme main .glass-panel:hover,
+.light-theme main .glass-panel-dark:hover {
+  transform: translateY(-6px) scale(1.02) rotate(-0.5deg) !important;
+  /* lift & subtle tilt */
+  background-color: #000000 !important;
+  /* flip background to black */
+  color: #ffffff !important;
+  /* flip text to white */
+  border-color: #000000 !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Ensure all children (texts, icons, labels) turn white on card hover */
+.light-theme main [class*="bg-[#"]:not(.no-hover-effect):hover *,
+.light-theme main .glass-panel:hover *,
+.light-theme main .glass-panel-dark:hover * {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Global typography overrides to pure black text */
+.light-theme main h1,
+.light-theme main h2,
+.light-theme main h3,
+.light-theme main h4,
+.light-theme main h5,
+.light-theme main h6,
+.light-theme main p,
+.light-theme main li,
+.light-theme main label,
+.light-theme main dt,
+.light-theme main dd,
+.light-theme main span:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main div:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main a:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main select,
+.light-theme main option,
+.light-theme main .text-blue-100:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-blue-200:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-blue-300:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-blue-400:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-blue-200\/70:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-blue-300\/50:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *),
+.light-theme main .text-white:not(button):not(button *):not(.bg-\[\#43bccd\]):not(.bg-\[\#43bccd\] *):not(.bg-primary):not(.bg-primary *):not(.bg-black):not(.bg-black *):not(.bg-slate-800):not(.bg-slate-800 *):not(.active):not(.active *) {
+  color: #000000 !important;
+}
+
+.light-theme main .bg-black,
+.light-theme main .bg-black *,
+.light-theme main .bg-slate-800,
+.light-theme main .bg-slate-800 * {
+  color: #ffffff !important;
+}
+
+/* Inputs, textareas, selection dropdowns */
+.light-theme main input:not(.border-none):not(.border-0):not(.border-transparent),
+.light-theme main textarea:not(.border-none):not(.border-0):not(.border-transparent),
+.light-theme main select:not(.border-none):not(.border-0):not(.border-transparent) {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  color: #000000 !important;
+  border-radius: 6px !important;
+}
+
+.light-theme main input:not(.border-none):not(.border-0):not(.border-transparent):focus,
+.light-theme main textarea:not(.border-none):not(.border-0):not(.border-transparent):focus,
+.light-theme main select:not(.border-none):not(.border-0):not(.border-transparent):focus {
+  background-color: #fafafa !important;
+  outline: none !important;
+  border: 2px solid #000000 !important;
+}
+
+.light-theme main input.border-none,
+.light-theme main input.border-0,
+.light-theme main input.border-transparent,
+.light-theme main input[placeholder="Search roles..."] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.light-theme main input.border-none:focus,
+.light-theme main input.border-0:focus,
+.light-theme main input.border-transparent:focus,
+.light-theme main input[placeholder="Search roles..."]:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Inputs placeholder overrides */
+.light-theme main input::placeholder,
+.light-theme main textarea::placeholder {
+  color: #8c8c8c !important;
+}
+
+/* Action Buttons (Inverted: Black bg, white text. Flips on hover) */
+.light-theme main button:not(.outline-btn):not(.ghost-btn),
+.light-theme main a.bg-primary,
+.light-theme main .bg-\[\#43bccd\],
+.light-theme main button.bg-\[\#43bccd\] {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+.light-theme main button:not(.outline-btn):not(.ghost-btn) *,
+.light-theme main a.bg-primary *,
+.light-theme main .bg-\[\#43bccd\] *,
+.light-theme main button.bg-\[\#43bccd\] * {
+  color: #ffffff !important;
+}
+
+/* Outline & Ghost Button theme overrides */
+.light-theme main button.outline-btn {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+.light-theme main button.outline-btn:not(.active) * {
+  color: #000000 !important;
+}
+
+.light-theme main button.outline-btn.active {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #000000 !important;
+}
+
+.light-theme main button.outline-btn.active * {
+  color: #ffffff !important;
+}
+
+.light-theme main button.ghost-btn {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.light-theme main button.ghost-btn * {
+  color: inherit !important;
+}
+
+/* Override white text inside buttons that are styled as white background cards (inactive buttons) */
+.light-theme main button[class*="bg-[#"]:not(.bg-\[\#43bccd\]):not(:hover) *,
+.light-theme main button[class*="bg-[#"]:not(.bg-\[\#43bccd\]):not(:hover) {
+  color: #000000 !important;
+}
+
+/* Hover inversion for buttons */
+.light-theme main button:not(.active):hover,
+.light-theme main a.bg-primary:not(.active):hover,
+.light-theme main .bg-\[\#43bccd\]:not(.active):hover,
+.light-theme main button.bg-\[\#43bccd\]:not(.active):hover {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+}
+
+.light-theme main button:not(.active):hover *,
+.light-theme main a.bg-primary:not(.active):hover *,
+.light-theme main .bg-\[\#43bccd\]:not(.active):hover *,
+.light-theme main button.bg-\[\#43bccd\]:not(.active):hover * {
+  color: #000000 !important;
+}
+
+/* Borders */
+.light-theme main .border-\[\#552a82\]\/20,
+.light-theme main .border-\[\#552a82\]\/30,
+.light-theme main .border-\[\#552a82\]\/35,
+.light-theme main .border-\[\#552a82\]\/40,
+.light-theme main .border-\[\#552a82\],
+.light-theme main .border {}
+
+/* Grayscale filters to enforce strict monochrome on icons, charts and vector components */
+.light-theme main svg,
+.light-theme main .recharts-responsive-container,
+.light-theme main img {
+  filter: grayscale(100%) contrast(1.1) !important;
+}
