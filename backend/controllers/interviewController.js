@@ -1,8 +1,8 @@
 const Interview = require('../models/Interview');
 const Resume = require('../models/Resume');
 const Submission = require('../models/Submission');
-const geminiService = require('../services/geminiService');
-const judgeService = require('../services/judgeService');
+const modelapi = require('../services/modelapi');
+const compilerapi = require('../services/compilerapi');
 
 // @route   POST api/interview/generate
 // @desc    Generate personalized interview questions from resume
@@ -25,8 +25,8 @@ exports.generateInterview = async (req, res) => {
 
     console.log(`Generating ${questionCount} questions for role: ${role}, difficulty: ${difficulty}...`);
 
-    // Call Gemini API to generate questions
-    const questions = await geminiService.generateQuestions(
+    // Call modelapi API to generate questions
+    const questions = await modelapi.generateQuestions(
       resumeDetails,
       role,
       difficulty,
@@ -94,7 +94,7 @@ exports.runCode = async (req, res) => {
 
     console.log(`Running user code against test case. Stdin: ${stdin}`);
 
-    const result = await judgeService.executeCode(code, language, stdin, expectedOutput);
+    const result = await compilerapi.executeCode(code, language, stdin, expectedOutput);
     res.json(result);
   } catch (error) {
     console.error('Run code error:', error.message);
@@ -129,7 +129,7 @@ exports.submitCode = async (req, res) => {
     // Run code against all test cases
     for (let i = 0; i < question.testCases.length; i++) {
       const tc = question.testCases[i];
-      const runResult = await judgeService.executeCode(code, language, tc.input, tc.output);
+      const runResult = await compilerapi.executeCode(code, language, tc.input, tc.output);
 
       if (runResult.status === 'Compilation Error') {
         finalStatus = 'Compilation Error';
@@ -163,7 +163,7 @@ exports.submitCode = async (req, res) => {
     let complexityAnalysis = { optimal: true, potentialTLE: false, sampleTLEInput: '', recommendation: '' };
     if (finalStatus === 'Accepted') {
       try {
-        complexityAnalysis = await geminiService.checkCodeComplexity(question, code, language);
+        complexityAnalysis = await modelapi.checkCodeComplexity(question, code, language);
       } catch (err) {
         console.warn('Complexity analysis failed:', err.message);
       }
@@ -196,7 +196,7 @@ exports.getAiAssist = async (req, res) => {
       return res.status(404).json({ msg: 'Question not found' });
     }
 
-    const response = await geminiService.getAssistantResponse(question, code, language, chatHistory);
+    const response = await modelapi.getAssistantResponse(question, code, language, chatHistory);
     res.json(response);
   } catch (error) {
     console.error('AI assistant error:', error.message);

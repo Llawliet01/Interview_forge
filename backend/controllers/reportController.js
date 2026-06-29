@@ -2,10 +2,10 @@ const Report = require('../models/Report');
 const Interview = require('../models/Interview');
 const Submission = require('../models/Submission');
 const Roadmap = require('../models/Roadmap');
-const geminiService = require('../services/geminiService');
+const modelapi = require('../services/modelapi');
 
 // @route   POST api/report/generate/:interviewId
-// @desc    Finish interview, evaluate solutions with Gemini, and create performance report + 30-day learning roadmap
+// @desc    Finish interview, evaluate solutions, and create performance report + 30-day learning roadmap
 // @access  Private
 exports.generateReport = async (req, res) => {
   const { interviewId } = req.params;
@@ -26,8 +26,8 @@ exports.generateReport = async (req, res) => {
 
     console.log(`Evaluating interview ${interviewId} with ${submissions.length} submissions...`);
 
-    // Grade and generate feedback with Gemini
-    const evaluation = await geminiService.evaluateInterview(interview, submissions);
+    // Grade and generate feedback
+    const evaluation = await modelapi.evaluateInterview(interview, submissions);
 
     // Save/Update report
     let report = await Report.findOne({ interviewId });
@@ -58,7 +58,7 @@ exports.generateReport = async (req, res) => {
 
     // Generate study roadmap based on weak areas
     console.log(`Generating study roadmap for weak areas: ${JSON.stringify(report.weakAreas)}...`);
-    const roadmapDetails = await geminiService.generateRoadmap(report.weakAreas);
+    const roadmapDetails = await modelapi.generateRoadmap(report.weakAreas);
 
     // Update or create Roadmap in database
     let roadmap = await Roadmap.findOne({ userId: req.user.id });

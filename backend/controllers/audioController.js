@@ -1,4 +1,4 @@
-const geminiService = require('../services/geminiService');
+const modelapi = require('../services/modelapi');
 const axios = require('axios');
 
 exports.chat = async (req, res) => {
@@ -14,7 +14,7 @@ exports.chat = async (req, res) => {
       conversationHistory.push({ role: 'user', text });
     }
 
-    const aiRes = await geminiService.getAudioInterviewResponse(conversationHistory, topic);
+    const aiRes = await modelapi.getAudioInterviewResponse(conversationHistory, topic);
     res.json({ 
       message: aiRes.message,
       history: [...conversationHistory, { role: 'model', text: aiRes.message }]
@@ -32,7 +32,7 @@ exports.evaluate = async (req, res) => {
       return res.status(400).json({ msg: 'Interview topic is required.' });
     }
 
-    const evalRes = await geminiService.evaluateAudioInterview(history || [], topic);
+    const evalRes = await modelapi.evaluateAudioInterview(history || [], topic);
     res.json(evalRes);
   } catch (error) {
     console.error('audioController.evaluate error:', error);

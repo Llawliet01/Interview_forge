@@ -1,4 +1,4 @@
-const judgeService = require('./services/judgeService');
+const compilerapi = require('./services/compilerapi');
 
 async function run() {
   console.log('Testing Piston Service code execution...');
@@ -20,7 +20,7 @@ async function run() {
   `;
 
   try {
-    const result = await judgeService.executeCode(jsCode, 'javascript', '', '[0,1]');
+    const result = await compilerapi.executeCode(jsCode, 'javascript', '', '[0,1]');
     console.log('Test Result:', result);
   } catch (error) {
     console.error('Test execution failed:', error);

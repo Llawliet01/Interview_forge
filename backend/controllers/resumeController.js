@@ -1,9 +1,9 @@
 const pdfParse = require('pdf-parse');
 const Resume = require('../models/Resume');
-const geminiService = require('../services/geminiService');
+const modelapi = require('../services/modelapi');
 
 // @route   POST api/resume/upload
-// @desc    Upload PDF resume, parse and analyze with Gemini
+// @desc    Upload PDF resume, parse and analyze
 // @access  Private
 exports.uploadResume = async (req, res) => {
   try {
@@ -21,9 +21,9 @@ exports.uploadResume = async (req, res) => {
       return res.status(400).json({ msg: 'Could not extract text from the PDF. Make sure it is not a scanned image.' });
     }
 
-    console.log('Sending text to Gemini for skill extraction...');
-    // Analyze resume text using Gemini Service
-    const analysis = await geminiService.analyzeResume(resumeText);
+    console.log('Sending text to system for skill extraction...');
+    // Analyze resume text using modelapi Service
+    const analysis = await modelapi.analyzeResume(resumeText);
 
     // Save/Update in DB
     let resume = await Resume.findOne({ userId: req.user.id });
