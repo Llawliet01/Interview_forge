@@ -9,11 +9,10 @@ A comprehensive web application designed to help students and professionals prep
 - [Overview](#-overview)
 - [Key Features](#-key-features)
 - [Tech Stack](#-tech-stack)
+- [Folder Structure](#-folder-structure)
 - [Getting Started](#-getting-started)
 - [Environment Variables](#-environment-variables)
 - [Running Locally](#-running-locally)
-- [Deployment](#-deployment)
-- [Security](#-security)
 
 ## 📋 Overview
 
@@ -25,6 +24,9 @@ A comprehensive web application designed to help students and professionals prep
 - **Voice-to-Voice Mock Interviews**: Practice interviews entirely through voice with real-time audio input/output.
 - **Dynamic Question Generation**: System customizes interview questions based on user-selected domains and experience levels.
 - **Real-Time Feedback**: Immediate evaluation of answers with scores for clarity, confidence, and technical accuracy.
+- **Multiple Interview Modes**:
+  - **Audio Interview Prep**: Voice-based interviews with transcriptions and detailed analysis
+  - **Text Interview Prep**: Traditional text-based interviews
 - **Speech Transcription**: Whisper-supported silence detection filters ("I don't know" fallback) to keep dialogue flowing.
 
 ### 💻 Live Coding Environment
@@ -38,6 +40,10 @@ A comprehensive web application designed to help students and professionals prep
 - **Content Suggestions**: System recommends improvements for better impact.
 - **File Upload Support**: Upload PDFs to synchronize with your practice tracks.
 
+### 🗺️ Study Roadmaps
+- **Custom Milestone Planners**: Generates tailored 30-day study calendars targeting candidate weaknesses.
+- **Progress Trackers**: Stay organized by marking milestones and tasks as complete.
+
 ### 📊 User Dashboard
 - **Personalized Insights**: Track your progress across all mock trials.
 - **Performance Analytics**: Detailed metrics on strengths and weaknesses.
@@ -48,16 +54,78 @@ A comprehensive web application designed to help students and professionals prep
 ### Frontend
 - **Framework**: Next.js (React)
 - **Language**: JavaScript / React Context
-- **Styling**: Tailwind CSS / Vanilla CSS
-- **UI Components**: Framer Motion, Lucide React
+- **Code Workspace**: Monaco Editor integration
+- **Styling & Animations**: Tailwind CSS, Vanilla CSS, Framer Motion
+- **UI Components**: Lucide React icons
 
-### Backend
+### Backend & Database
 - **Framework**: Node.js with Express
-- **Database**: MongoDB (Atlas)
-- **Email Service**: Nodemailer OTP verification flow
+- **Database**: MongoDB (Atlas) with Mongoose ODM
+- **Verification Engine**: Nodemailer (secured 6-digit SMTP OTP verification)
+
+### Models & Speech APIs
+- **Text & Evaluation Engines**: Google Gemini API, Groq Cloud API, OpenRouter API (configured with auto-failover chains, rate-limit usage statistics, and exponential backoff)
+- **Speech-to-Text**: OpenAI Whisper API (for high-fidelity transcription)
+- **Text-to-Speech**: Browser-native SpeechSynthesis (with speed selector configuration)
 
 ### Code Execution
-- **Compiler**: Piston API (Docker-based compiler environment)
+- **Compiler Sandbox**: Piston API (Self Hosted on Oracle Cloud Infrastructure using Docker-based runtimes for Java, C++, Python, and JavaScript)
+
+### Infrastructure & Deployment
+- **Frontend Hosting**: Vercel (Next.js serverless architecture)
+- **Backend & Sandbox Hosting**: Oracle Cloud Infrastructure (OCI Compute Instance)
+- **Version Control**: Git & GitHub
+
+## 📁 Folder Structure
+
+```
+interview_forge/
+├── frontend/                # Next.js Application
+│   ├── app/                  # App Router Pages
+│   │   ├── dashboard/        # Authenticated workspace
+│   │   │   ├── audio-interview/   # Voice practice pages
+│   │   │   ├── contact/           # Support & bug report
+│   │   │   ├── faq/               # Accordioned user support
+│   │   │   ├── reports/           # Detailed performance metrics
+│   │   │   ├── resume/            # Tech stack PDF analyzer
+│   │   │   ├── roadmaps/          # Study milestone trackers
+│   │   │   ├── room/[id]/         # Monaco coding editor environment
+│   │   │   ├── settings/          # Custom theme & voice controls
+│   │   │   └── setup/             # Mock interview profile setup
+│   │   ├── login/            # Glassmorphic OTP & auth layout
+│   │   ├── globals.css       # Core custom design theme
+│   │   └── layout.js         # Navigation layout wrapper
+│   ├── context/              # State providers
+│   │   ├── AuthContext.js    # JWT & verify-otp state machine
+│   │   └── ThemeContext.js   # Light/dark mode manager
+│   └── package.json          # Frontend dependencies
+│
+├── backend/                 # Express.js REST API
+│   ├── config/               # DB connectivity wrapper
+│   ├── controllers/          # Business logic handlers
+│   │   ├── audioController.js
+│   │   ├── authController.js
+│   │   ├── interviewController.js
+│   │   ├── reportController.js
+│   │   └── resumeController.js
+│   ├── middleware/           # JWT auth interceptors
+│   ├── models/               # Mongoose schemas
+│   │   ├── Interview.js
+│   │   ├── Report.js
+│   │   ├── Resume.js
+│   │   ├── Roadmap.js
+│   │   ├── Submission.js
+│   │   └── User.js
+│   ├── routes/               # API endpoints mappings
+│   ├── services/             # Core service integrations
+│   │   ├── compilerapi.js    # Wrapped Piston Sandbox runner
+│   │   └── modelapi.js       # Auto-failover LLM model api
+│   ├── server.js             # Express app entrypoint
+│   └── package.json          # Backend dependencies
+│
+├── .gitignore                # Git ignore constraints (keys & local tests)
+└── README.md                 # Project documentation
+```
 
 ## 🏁 Getting Started
 
