@@ -77,15 +77,15 @@ function DashboardLayoutInner({ children }) {
   }, []);
 
   const navigation = [
-    { name: 'Dashboard',        href: '/dashboard',          icon: LayoutDashboard, badge: null },
-    { name: 'Resume Analysis',  href: '/dashboard/resume',   icon: UploadCloud,     badge: null },
-    { name: 'Audio Interview',  href: '/dashboard/audio-interview', icon: Mic,      badge: 'New' },
-    { name: 'Start Interview',  href: '/dashboard/setup',    icon: FolderPlus,      badge: null },
-    { name: 'Reports History',  href: '/dashboard/reports',  icon: FileText,        badge: null },
-    { name: 'Study Roadmaps',   href: '/dashboard/roadmaps', icon: Map,             badge: null },
-    { name: 'FAQ Support',      href: '/dashboard/faq',      icon: HelpCircle,      badge: null },
-    { name: 'Contact Us',       href: '/dashboard/contact',  icon: Mail,            badge: null },
-    { name: 'Settings',         href: '/dashboard/settings', icon: Settings,        badge: null },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, badge: null },
+    { name: 'Resume Analysis', href: '/dashboard/resume', icon: UploadCloud, badge: null },
+    { name: 'Audio Interview', href: '/dashboard/audio-interview', icon: Mic, badge: 'New' },
+    { name: 'Start Interview', href: '/dashboard/setup', icon: FolderPlus, badge: null },
+    { name: 'Reports History', href: '/dashboard/reports', icon: FileText, badge: null },
+    { name: 'Study Roadmaps', href: '/dashboard/roadmaps', icon: Map, badge: null },
+    { name: 'FAQ Support', href: '/dashboard/faq', icon: HelpCircle, badge: null },
+    { name: 'Contact Us', href: '/dashboard/contact', icon: Mail, badge: null },
+    { name: 'Settings', href: '/dashboard/settings', icon: Settings, badge: null },
   ];
 
   /* ── loading spinner ── */
@@ -127,19 +127,14 @@ function DashboardLayoutInner({ children }) {
       }}
     >
       {/* ── ZONE 1 · BRAND ── */}
-      <div className={`px-4 py-3.5 border-b shrink-0 ${theme === 'light' ? 'border-slate-200' : 'border-[#552a82]/20'}`}>
+      <div className={`px-4 py-1.5 border-b shrink-0 ${theme === 'light' ? 'border-slate-200' : 'border-[#552a82]/20'}`}>
         <div className="flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            {/* Logo pill */}
-            <div className="relative h-9 w-9 rounded-xl bg-[#43bccd] flex items-center justify-center shadow-sm shrink-0 border border-[#43bccd]/30">
-              <span className="text-white font-black text-sm tracking-tight">IF</span>
-              {/* pulsing dot */}
-              <span className={`absolute -top-0.5 -right-0.5 h-2.5 w-2.5 bg-[#f86624] rounded-full border-2 ${theme === 'light' ? 'border-white' : 'border-[#391c57]'}`} />
-            </div>
-            <div>
-              <p className={`font-black text-base tracking-tight leading-none whitespace-nowrap ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>InterviewForge</p>
-              <p className="text-[10px] text-[#43bccd] font-semibold tracking-widest uppercase mt-0.5 whitespace-nowrap">Prep Platform</p>
-            </div>
+            {theme === 'light' ? (
+              <img src="/logo-light.png" alt="InterviewForge Logo" className="h-20 w-auto object-contain" />
+            ) : (
+              <img src="/logo-dark.png" alt="InterviewForge Logo" className="h-20 w-auto object-contain" />
+            )}
           </Link>
           <div className="flex items-center gap-1 shrink-0">
             <button
@@ -185,8 +180,8 @@ function DashboardLayoutInner({ children }) {
                 ${isActive
                   ? 'bg-[#43bccd] text-white shadow-sm border border-[#f86624]/35'
                   : (theme === 'light'
-                      ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                      : 'text-blue-100 hover:text-white hover:bg-[#552a82]/35')
+                    ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    : 'text-blue-100 hover:text-white hover:bg-[#552a82]/35')
                 }
               `}
             >
@@ -201,8 +196,8 @@ function DashboardLayoutInner({ children }) {
                 ${isActive
                   ? 'bg-[#391c57] text-[#f86624]'
                   : (theme === 'light'
-                      ? 'bg-slate-50 group-hover:bg-slate-200/50 text-slate-500'
-                      : 'bg-[#391c57]/60 group-hover:bg-[#552a82]/50 text-blue-200')
+                    ? 'bg-slate-50 group-hover:bg-slate-200/50 text-slate-500'
+                    : 'bg-[#391c57]/60 group-hover:bg-[#552a82]/50 text-blue-200')
                 }
               `}>
                 <Icon className="h-4 w-4" />
@@ -230,11 +225,10 @@ function DashboardLayoutInner({ children }) {
 
 
         {/* User profile strip */}
-        <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border ${
-          theme === 'light'
+        <div className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border ${theme === 'light'
             ? 'bg-slate-50 border-slate-200'
             : 'bg-[#391c57]/70 border-[#552a82]/30'
-        }`}>
+          }`}>
           {/* Avatar */}
           <div className="h-8 w-8 rounded-lg bg-[#43bccd] flex items-center justify-center font-bold text-xs text-white shrink-0 border border-[#552a82]/40 shadow-sm">
             {initials}
@@ -252,17 +246,15 @@ function DashboardLayoutInner({ children }) {
         {/* Logout button */}
         <button
           onClick={logout}
-          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all duration-200 group ${
-            theme === 'light'
+          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all duration-200 group ${theme === 'light'
               ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
               : 'text-blue-200 hover:bg-[#43bccd]/30 hover:text-white'
-          }`}
+            }`}
         >
-          <span className={`flex items-center justify-center h-6.5 w-6.5 rounded-md transition-colors ${
-            theme === 'light'
+          <span className={`flex items-center justify-center h-6.5 w-6.5 rounded-md transition-colors ${theme === 'light'
               ? 'bg-slate-100 group-hover:bg-slate-200 text-slate-500 group-hover:text-slate-700'
               : 'bg-[#391c57] group-hover:bg-[#552a82] text-blue-200'
-          }`}>
+            }`}>
             <LogOut className="h-3 w-3" />
           </span>
           Sign Out

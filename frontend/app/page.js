@@ -4,14 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { 
-  FileText, 
-  Terminal, 
-  Award, 
-  TrendingUp, 
-  Activity, 
-  Map, 
-  ArrowRight, 
+import {
+  FileText,
+  Terminal,
+  Award,
+  TrendingUp,
+  Activity,
+  Map,
+  ArrowRight,
   CheckCircle,
   Play
 } from 'lucide-react';
@@ -90,8 +90,8 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-4">
             {user ? (
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className="bg-primary hover:bg-[#f86624] text-[#2b1542] px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-md"
               >
                 Go to Dashboard
@@ -101,8 +101,8 @@ export default function LandingPage() {
                 <Link href="/login" className="text-sm font-semibold text-blue-200/70 hover:text-white transition-colors">
                   Login
                 </Link>
-                <Link 
-                  href="/login?signup=true" 
+                <Link
+                  href="/login?signup=true"
                   className="bg-primary hover:bg-[#f86624] text-[#2b1542] px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-md shadow-sm shadow-[#43bccd]/20"
                 >
                   Get Started
@@ -135,14 +135,14 @@ export default function LandingPage() {
                   Personalized coding interviews, resume-based questions, real-time code compilation, structured feedback and 30-day progress roadmaps.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                  <Link 
-                    href={user ? "/dashboard" : "/login"} 
+                  <Link
+                    href={user ? "/dashboard" : "/login"}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#f86624] text-[#2b1542] px-6 py-3 rounded-lg font-semibold transition-all hover:shadow-lg group shadow-sm shadow-[#43bccd]/20"
                   >
                     Start Free Interview
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                  <button 
+                  <button
                     onClick={() => alert("Demo video is coming soon! Feel free to upload a resume and try the mock coding room.")}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2b1542] hover:bg-[#391c57] text-white border border-[#552a82]/40 px-6 py-3 rounded-lg font-semibold transition-all"
                   >
@@ -170,7 +170,7 @@ export default function LandingPage() {
                   <span className="text-xs text-blue-200/50 font-medium">interviewforge-dashboard.app</span>
                   <span className="w-4"></span>
                 </div>
-                
+
                 <div className="space-y-4">
                   {/* Mock dashboard content */}
                   <div className="flex items-center justify-between bg-[#211033] p-3 rounded-lg border border-[#552a82]/20">
@@ -232,7 +232,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <motion.div 
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -240,7 +240,7 @@ export default function LandingPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {features.map((feature, idx) => (
-              <motion.div 
+              <motion.div
                 key={idx}
                 variants={itemVariants}
                 className="p-6 rounded-xl border border-[#552a82]/20 bg-[#211033]/30 hover:bg-[#211033] hover:shadow-2xl hover:border-[#552a82]/40 transition-all duration-300 flex flex-col gap-4 cursor-default group"
@@ -304,8 +304,8 @@ export default function LandingPage() {
             Upload your resume and simulate actual coding rounds with active compilation, tests, and deep scoring.
           </p>
           <div className="pt-4">
-            <Link 
-              href={user ? "/dashboard" : "/login?signup=true"} 
+            <Link
+              href={user ? "/dashboard" : "/login?signup=true"}
               className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#f86624] text-[#2b1542] px-8 py-3.5 rounded-lg font-semibold transition-all hover:scale-105 shadow-md shadow-[#43bccd]/20"
             >
               Start Free

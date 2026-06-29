@@ -171,7 +171,7 @@ function LoginForm() {
       {/* Left Pane - Illustration and Brand */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#150a21] relative overflow-hidden items-center justify-center text-white px-12">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#43bccd]/10 via-[#2b1542] to-[#150a21] opacity-90"></div>
-        
+
         <div className="relative z-10 max-w-lg space-y-8">
           <div className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-[#2b1542] font-extrabold text-xl shadow-lg shadow-[#43bccd]/20">
@@ -212,7 +212,7 @@ function LoginForm() {
 
       {/* Right Pane - Form Card */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative bg-[#150a21]">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -308,8 +308,8 @@ function LoginForm() {
                   {isSignup ? 'Create account' : 'Welcome back'}
                 </h3>
                 <p className="text-blue-200/80 text-sm mt-2">
-                  {isSignup 
-                    ? 'Join thousands of developers acing technical coding trials.' 
+                  {isSignup
+                    ? 'Join thousands of developers acing technical coding trials.'
                     : 'Sign in to access your interview dashboard and studies.'}
                 </p>
               </div>
