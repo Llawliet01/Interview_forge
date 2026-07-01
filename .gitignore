@@ -53,3 +53,8 @@ backend/list-*.js
 **/test-*.js
 **/verify-*.js
 **/list-*.js
+
+# Python environment and datasets
+ml_env/
+ml/ravdess_data/
+ml/*.pkl
