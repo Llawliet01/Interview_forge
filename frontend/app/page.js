@@ -85,7 +85,7 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
             <span className="text-[#552a82]/50">|</span>
-            <span className="text-blue-300/40 cursor-not-allowed">Pricing <span className="text-xs bg-[#211033] text-blue-300/60 py-0.5 px-1.5 rounded-full font-normal">Soon</span></span>
+            <a href="https://github.com/Llawliet01/interview_forge" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Open Source</a>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -139,7 +139,7 @@ export default function LandingPage() {
                     href={user ? "/dashboard" : "/login"}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#f86624] text-[#2b1542] px-6 py-3 rounded-lg font-semibold transition-all hover:shadow-lg group shadow-sm shadow-[#43bccd]/20"
                   >
-                    Start Free Interview
+                    Start Practice Interview
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <button
@@ -308,12 +308,12 @@ export default function LandingPage() {
               href={user ? "/dashboard" : "/login?signup=true"}
               className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#f86624] text-[#2b1542] px-8 py-3.5 rounded-lg font-semibold transition-all hover:scale-105 shadow-md shadow-[#43bccd]/20"
             >
-              Start Free
+              Start Practice Now
             </Link>
           </div>
         </div>
       </section>
-
+ 
       {/* Footer */}
       <footer className="bg-[#2b1542] border-t border-[#552a82]/25 py-8 text-center text-blue-200/50 text-xs">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -321,7 +321,7 @@ export default function LandingPage() {
           <div className="flex gap-6">
             <span className="cursor-pointer hover:text-white transition-colors">Privacy Policy</span>
             <span className="cursor-pointer hover:text-white transition-colors">Terms of Use</span>
-            <span className="cursor-pointer hover:text-white font-semibold text-primary transition-colors">SaaS Prep Tools</span>
+            <span className="cursor-pointer hover:text-white font-semibold text-primary transition-colors">Student Prep Tools</span>
           </div>
         </div>
       </footer>
