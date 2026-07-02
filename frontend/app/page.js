@@ -72,14 +72,9 @@ export default function LandingPage() {
       {/* Navbar */}
       <header className="sticky top-0 z-40 w-full border-b border-[#552a82]/20 bg-[#2b1542]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-[#2b1542] font-extrabold text-lg shadow-sm shadow-[#43bccd]/20">
-              IF
-            </div>
-            <span className="font-extrabold text-xl tracking-tight text-white">
-              InterviewForge
-            </span>
-          </div>
+          <Link href="/" className="flex items-center">
+            <img src="/logo-dark.png" alt="InterviewForge Logo" className="h-10 w-auto object-contain" />
+          </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-blue-200/80">
             <a href="#features" className="hover:text-white transition-colors">Features</a>

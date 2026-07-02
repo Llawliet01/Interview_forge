@@ -173,13 +173,8 @@ function LoginForm() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#43bccd]/10 via-[#2b1542] to-[#150a21] opacity-90"></div>
 
         <div className="relative z-10 max-w-lg space-y-8">
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-[#2b1542] font-extrabold text-xl shadow-lg shadow-[#43bccd]/20">
-              IF
-            </div>
-            <span className="font-extrabold text-2xl tracking-tight text-white">
-              InterviewForge
-            </span>
+          <div className="flex items-center">
+            <img src="/logo-dark.png" alt="InterviewForge Logo" className="h-12 w-auto object-contain" />
           </div>
 
           <div className="space-y-4">
