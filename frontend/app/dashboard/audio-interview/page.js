@@ -93,6 +93,7 @@ export default function AudioInterviewPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [evalReport, setEvalReport] = useState(null);
   const [evalLoading, setEvalLoading] = useState(false);
+  const [speechMetrics, setSpeechMetrics] = useState(null);
 
   const getCombinedTopic = () => {
     if (selectedTopics.length === 0) return 'General Software Engineering';
@@ -239,6 +240,14 @@ export default function AudioInterviewPage() {
       if (!res.ok) throw new Error(data.msg);
       setLiveCaption('');
 
+      // Extract speech metrics if available in response
+      if (data.pacing || data.acoustic_analysis) {
+        setSpeechMetrics({
+          pacing: data.pacing,
+          acoustic: data.acoustic_analysis
+        });
+      }
+
       const rawText = data.text?.trim() || '';
       // Strip punctuation and casing to detect common Whisper silence/noise hallucinations
       const cleanText = rawText.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
@@ -311,6 +320,7 @@ export default function AudioInterviewPage() {
     setChatHistory([]);
     chatHistoryRef.current = [];
     setEvalReport(null);
+    setSpeechMetrics(null);
     setAiState('thinking');
     setLiveCaption('');
     setIsMuted(false);
@@ -718,51 +728,167 @@ export default function AudioInterviewPage() {
               </div>
             </div>
 
-            {/* Right: Live transcript panel — scroll is ONLY inside this box */}
+            {/* Right: Dual panel containing Live Speech Analysis and Transcript */}
             <div style={{
-              borderRadius: '1rem',
-              border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.3)',
-              backgroundColor: isLight ? '#ffffff' : 'rgba(43,21,66,0.85)',
               display: 'flex',
               flexDirection: 'column',
-              overflow: 'hidden',    /* ← this is the key: the panel itself never grows */
-              opacity: showTranscript ? 1 : 0.3,
-              pointerEvents: showTranscript ? 'auto' : 'none',
-              padding: '1rem',
-              transition: 'opacity 0.2s',
+              gap: '1rem',
+              height: '100%',
+              minHeight: 0,
+              overflow: 'hidden'
             }}>
-              {/* Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '0.75rem', borderBottom: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.2)', flexShrink: 0 }}>
-                <FileText style={{ height: '16px', width: '16px', color: '#ffd60a' }} />
-                <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: isLight ? '#64748b' : '#bfdbfe' }}>Live Transcript</span>
-              </div>
-              {/* Scrollable messages — ONLY this element scrolls */}
-              <div style={{ flex: 1, overflowY: 'auto', padding: '1rem 0.25rem 0.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem', minHeight: 0 }}>
-                {chatHistory.length === 0 ? (
-                  <p style={{ textAlign: 'center', paddingTop: '1.5rem', fontSize: '11px', color: isLight ? '#94a3b8' : 'rgba(147,197,253,0.3)' }}>Conversation will appear here.</p>
-                ) : chatHistory.map((msg, idx) => (
-                  <div key={idx} style={{
-                    padding: '0.625rem', borderRadius: '0.75rem', fontSize: '11px', lineHeight: '1.5',
-                    border: msg.role === 'user'
-                      ? isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.2)'
-                      : isLight ? '1px solid #bfdbfe' : '1px solid rgba(255,214,10,0.2)',
-                    backgroundColor: msg.role === 'user'
-                      ? isLight ? '#f8fafc' : 'rgba(33,16,51,0.6)'
-                      : isLight ? 'rgba(239,246,255,0.5)' : 'rgba(57,28,87,0.45)',
-                    color: msg.role === 'user'
-                      ? isLight ? '#1e293b' : '#bfdbfe'
-                      : isLight ? '#374151' : '#fff',
-                    marginLeft: msg.role === 'user' ? '1rem' : 0,
-                    marginRight: msg.role === 'user' ? 0 : '1rem',
-                  }}>
-                    <span style={{ display: 'block', fontWeight: 700, fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem', color: msg.role === 'user' ? (isLight ? '#94a3b8' : '#93c5fd') : '#ffd60a' }}>
-                      {msg.role === 'user' ? 'You' : 'Interviewer'}
-                    </span>
-                    {msg.text}
+              
+              {/* Top: Speech Performance Card */}
+              <div style={{
+                borderRadius: '1rem',
+                border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.3)',
+                backgroundColor: isLight ? '#ffffff' : 'rgba(43,21,66,0.85)',
+                padding: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                flexShrink: 0
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '0.5rem', borderBottom: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.2)' }}>
+                  <span style={{ fontSize: '14px' }}>📊</span>
+                  <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: isLight ? '#64748b' : '#bfdbfe' }}>Speech Performance Analysis</span>
+                </div>
+
+                {speechMetrics ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    
+                    {/* Ensemble Confidence Ring/State */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'between', backgroundColor: isLight ? '#f8fafc' : 'rgba(33,16,51,0.5)', padding: '0.75rem', borderRadius: '0.75rem', border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.1)' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span style={{ fontSize: '9px', fontWeight: 700, color: isLight ? '#94a3b8' : '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Overall Confidence</span>
+                        <span style={{ fontSize: '13px', fontWeight: 800, color: '#ffd60a' }}>
+                          {speechMetrics.acoustic?.ensemble_average?.speaking_state || 'Analyzing'}
+                        </span>
+                      </div>
+                      <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                        <span style={{ fontSize: '18px', fontWeight: 900, color: isLight ? '#0f172a' : '#fff' }}>
+                          {speechMetrics.acoustic?.ensemble_average?.confidence_score?.toFixed(1)}%
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Dual Model Confidence Breakdown */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                      {/* Model A */}
+                      <div style={{ display: 'flex', flexDirection: 'column', padding: '0.5rem', borderRadius: '0.5rem', border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.1)', backgroundColor: isLight ? '#f8fafc' : 'rgba(33,16,51,0.3)' }}>
+                        <span style={{ fontSize: '8px', fontWeight: 700, color: isLight ? '#64748b' : '#93c5fd', textTransform: 'uppercase' }}>RF Noisy</span>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
+                          {speechMetrics.acoustic?.prediction_rav_noisy?.confidence_score?.toFixed(1)}%
+                        </span>
+                        <span style={{ fontSize: '8px', color: isLight ? '#94a3b8' : 'rgba(147,197,253,0.6)' }}>
+                          {speechMetrics.acoustic?.prediction_rav_noisy?.speaking_state}
+                        </span>
+                      </div>
+                      {/* Model B */}
+                      <div style={{ display: 'flex', flexDirection: 'column', padding: '0.5rem', borderRadius: '0.5rem', border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.1)', backgroundColor: isLight ? '#f8fafc' : 'rgba(33,16,51,0.3)' }}>
+                        <span style={{ fontSize: '8px', fontWeight: 700, color: isLight ? '#64748b' : '#93c5fd', textTransform: 'uppercase' }}>RF Set 4</span>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
+                          {speechMetrics.acoustic?.prediction_comb_set4?.confidence_score?.toFixed(1)}%
+                        </span>
+                        <span style={{ fontSize: '8px', color: isLight ? '#94a3b8' : 'rgba(147,197,253,0.6)' }}>
+                          {speechMetrics.acoustic?.prediction_comb_set4?.speaking_state}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Secondary Metrics */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '10px' }}>
+                      {/* Pacing */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <span>⏱️</span>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 700, color: isLight ? '#475569' : '#fff' }}>
+                            {speechMetrics.pacing?.wpm} WPM
+                          </span>
+                          <span style={{ fontSize: '8px', color: isLight ? '#64748b' : '#93c5fd' }}>
+                            {speechMetrics.pacing?.label}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Silence Ratio */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <span>⏸️</span>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 700, color: isLight ? '#475569' : '#fff' }}>
+                            {speechMetrics.acoustic?.custom_metrics?.hesitation_index_pct?.toFixed(1)}%
+                          </span>
+                          <span style={{ fontSize: '8px', color: isLight ? '#64748b' : '#93c5fd' }}>
+                            Hesitation Rate
+                          </span>
+                        </div>
+                      </div>
+                      {/* Voice Stability */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', gridColumn: 'span 2', marginTop: '0.25rem', paddingTop: '0.35rem', borderTop: isLight ? '1px solid #f1f5f9' : '1px solid rgba(85,42,130,0.15)' }}>
+                        <span>🎙️</span>
+                        <span style={{ color: isLight ? '#64748b' : '#93c5fd' }}>Voice Stability:</span>
+                        <span style={{ fontWeight: 800, color: speechMetrics.acoustic?.custom_metrics?.pitch_stability === 'Stable' ? '#16a34a' : '#ffd60a' }}>
+                          {speechMetrics.acoustic?.custom_metrics?.pitch_stability}
+                        </span>
+                      </div>
+                    </div>
+
                   </div>
-                ))}
-                <div ref={chatEndRef} />
+                ) : (
+                  <p style={{ fontSize: '11px', color: isLight ? '#64748b' : 'rgba(147,197,253,0.5)', fontStyle: 'italic', textAlign: 'center', padding: '1rem 0' }}>
+                    Speak your answer to see live voice performance analysis.
+                  </p>
+                )}
               </div>
+
+              {/* Bottom: Live transcript panel */}
+              <div style={{
+                borderRadius: '1rem',
+                border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.3)',
+                backgroundColor: isLight ? '#ffffff' : 'rgba(43,21,66,0.85)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                opacity: showTranscript ? 1 : 0.3,
+                pointerEvents: showTranscript ? 'auto' : 'none',
+                padding: '1rem',
+                transition: 'opacity 0.2s',
+                flex: 1,
+                minHeight: 0
+              }}>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '0.75rem', borderBottom: isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.2)', flexShrink: 0 }}>
+                  <FileText style={{ height: '16px', width: '16px', color: '#ffd60a' }} />
+                  <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: isLight ? '#64748b' : '#bfdbfe' }}>Live Transcript</span>
+                </div>
+                {/* Scrollable messages */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '1rem 0.25rem 0.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem', minHeight: 0 }}>
+                  {chatHistory.length === 0 ? (
+                    <p style={{ textAlign: 'center', paddingTop: '1.5rem', fontSize: '11px', color: isLight ? '#94a3b8' : 'rgba(147,197,253,0.3)' }}>Conversation will appear here.</p>
+                  ) : chatHistory.map((msg, idx) => (
+                    <div key={idx} style={{
+                      padding: '0.625rem', borderRadius: '0.75rem', fontSize: '11px', lineHeight: '1.5',
+                      border: msg.role === 'user'
+                        ? isLight ? '1px solid #e2e8f0' : '1px solid rgba(85,42,130,0.2)'
+                        : isLight ? '1px solid #bfdbfe' : '1px solid rgba(255,214,10,0.2)',
+                      backgroundColor: msg.role === 'user'
+                        ? isLight ? '#f8fafc' : 'rgba(33,16,51,0.6)'
+                        : isLight ? 'rgba(239,246,255,0.5)' : 'rgba(57,28,87,0.45)',
+                      color: msg.role === 'user'
+                        ? isLight ? '#1e293b' : '#bfdbfe'
+                        : isLight ? '#374151' : '#fff',
+                      marginLeft: msg.role === 'user' ? '1rem' : 0,
+                      marginRight: msg.role === 'user' ? 0 : '1rem',
+                    }}>
+                      <span style={{ display: 'block', fontWeight: 700, fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem', color: msg.role === 'user' ? (isLight ? '#94a3b8' : '#93c5fd') : '#ffd60a' }}>
+                        {msg.role === 'user' ? 'You' : 'Interviewer'}
+                      </span>
+                      {msg.text}
+                    </div>
+                  ))}
+                  <div ref={chatEndRef} />
+                </div>
+              </div>
+
             </div>
           </motion.div>
         )}

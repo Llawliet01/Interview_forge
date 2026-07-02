@@ -163,7 +163,7 @@ export default function InterviewRoomPage() {
           result: null
         };
         initialChats[q.id] = [
-          { sender: 'ai', message: `Hi there! I am your Interview Co-pilot. I can give you hints about constraints or logic optimization for "${q.title}". Just type your queries here!` }
+          { sender: 'ai', message: `Hi there! I am your Practice Assistant. I can give you hints about constraints or logic optimization for "${q.title}". Just type your queries here!` }
         ];
       });
       
@@ -365,7 +365,7 @@ export default function InterviewRoomPage() {
 
       const data = await res.json();
       
-      if (!res.ok) throw new Error(data.msg || 'AI error');
+      if (!res.ok) throw new Error(data.msg || 'Assistant error');
 
       setChatHistory(prev => ({
         ...prev,
@@ -551,7 +551,7 @@ export default function InterviewRoomPage() {
             >
               <span className="inline-flex items-center gap-1.5 justify-center">
                 <Sparkles className="h-3.5 w-3.5 text-[#ffd60a]" />
-                Interview Co-pilot
+                Practice Assistant
               </span>
             </button>
           </div>

@@ -50,12 +50,14 @@ exports.transcribe = async (req, res) => {
       return res.status(500).json({ msg: 'Groq API Key is not configured on server.' });
     }
 
-    // Use native FormData and Blobs (globally supported in Node 18+)
+    // 1. Prepare FormData for Groq Whisper
     const formData = new FormData();
     const blob = new Blob([req.file.buffer], { type: req.file.mimetype });
     formData.append('file', blob, 'audio.webm');
     formData.append('model', 'whisper-large-v3');
     formData.append('language', 'en');
+    // Request verbose_json to get the exact duration of the clip
+    formData.append('response_format', 'verbose_json');
 
     console.log('[Audio Controller] Sending recording blob to Groq Whisper...');
     const response = await axios.post('https://api.groq.com/openai/v1/audio/transcriptions', formData, {
@@ -65,12 +67,69 @@ exports.transcribe = async (req, res) => {
       timeout: 10000 // 10s timeout
     });
 
-    if (response.data && response.data.text) {
-      console.log('[Audio Controller] Whisper Transcription Success:', response.data.text);
-      return res.json({ text: response.data.text });
-    } else {
+    if (!response.data || !response.data.text) {
       throw new Error('Invalid transcription payload from Groq.');
     }
+
+    const transcriptionText = response.data.text;
+    const audioDuration = response.data.duration || 0.0;
+    
+    console.log(`[Audio Controller] Groq Whisper Success. Duration: ${audioDuration}s`);
+
+    // 2. Compute Pacing Metrics (Words Per Minute)
+    const wordCount = transcriptionText.trim().split(/\s+/).filter(w => w.length > 0).length;
+    let wpm = 0;
+    let pacingLabel = 'N/A';
+    
+    if (audioDuration > 0 && wordCount > 0) {
+      wpm = Math.round((wordCount / audioDuration) * 60);
+      if (wpm < 110) {
+        pacingLabel = 'Slow Pace';
+      } else if (wpm <= 160) {
+        pacingLabel = 'Steady & Calm Pace';
+      } else {
+        pacingLabel = 'Fast Pace';
+      }
+    }
+
+    // 3. Request Speech Emotion Analysis from Hugging Face Space (if configured)
+    let acousticAnalysis = null;
+    const hfUrl = process.env.SPEECH_CLASSIFIER_URL;
+
+    if (hfUrl) {
+      try {
+        console.log('[Audio Controller] Forwarding audio buffer to Hugging Face Dual Classifier...');
+        const hfFormData = new FormData();
+        const hfBlob = new Blob([req.file.buffer], { type: req.file.mimetype });
+        hfFormData.append('file', hfBlob, 'audio.webm');
+
+        const hfResponse = await axios.post(hfUrl, hfFormData, {
+          timeout: 10000 // 10s timeout
+        });
+
+        if (hfResponse.data) {
+          acousticAnalysis = hfResponse.data;
+          console.log('[Audio Controller] Hugging Face Classification Success');
+        }
+      } catch (hfError) {
+        console.warn('[Audio Controller] Hugging Face Classifier failed (falling back):', hfError.message);
+      }
+    } else {
+      console.log('[Audio Controller] SPEECH_CLASSIFIER_URL not configured. Skipping acoustic check.');
+    }
+
+    // 4. Return aggregated response
+    return res.json({
+      text: transcriptionText,
+      pacing: {
+        wpm: wpm,
+        label: pacingLabel,
+        wordCount: wordCount,
+        duration: audioDuration
+      },
+      acoustic_analysis: acousticAnalysis
+    });
+
   } catch (error) {
     console.error('audioController.transcribe error:', error.response ? JSON.stringify(error.response.data) : error.message);
     res.status(500).json({ msg: 'Failed to transcribe audio. Please try again.' });

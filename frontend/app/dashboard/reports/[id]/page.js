@@ -86,7 +86,7 @@ export default function DetailedReportPage() {
         <div>
           <h2 className={`text-2xl font-extrabold ${isLight ? 'text-slate-900' : 'text-white'}`}>Evaluation Feedback</h2>
           <p className={`text-sm mt-0.5 ${isLight ? 'text-slate-600' : 'text-blue-200'}`}>
-            Interviews results for SDE candidate. Evaluated via Gemini model checks.
+            Interviews results for SDE candidate. Evaluated via automated evaluation checks.
           </p>
         </div>
       </div>
