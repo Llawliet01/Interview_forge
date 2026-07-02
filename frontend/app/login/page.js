@@ -187,7 +187,7 @@ function LoginForm() {
               Accelerate your engineering preparation today.
             </h2>
             <p className="text-blue-200/70 leading-relaxed text-sm">
-              Create an account to upload technical PDF resumes, compile coding solutions against complete standard arrays/graphs test cases, and analyze technical OS, DBMS, and Network knowledge with Gemini.
+              Create an account to upload technical PDF resumes, compile coding solutions against complete standard arrays/graphs test cases, and analyze technical OS, DBMS, and Network knowledge via mock evaluations.
             </p>
           </div>
 
@@ -202,7 +202,7 @@ function LoginForm() {
             <div className="flex items-start gap-3">
               <Cpu className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-white">Gemini LLM Co-pilot Feedback</h4>
+                <h4 className="font-semibold text-white">Automated Assistant Feedback</h4>
                 <p>Interactive code reviews, prompt complexity recommendations, and direct 30-day study calendars.</p>
               </div>
             </div>
