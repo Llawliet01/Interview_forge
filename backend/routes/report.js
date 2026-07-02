@@ -7,5 +7,6 @@ router.post('/generate/:interviewId', auth, reportController.generateReport);
 router.get('/history', auth, reportController.getReportsHistory);
 router.get('/interview/:interviewId', auth, reportController.getReportByInterviewId);
 router.get('/roadmap', auth, reportController.getRoadmap);
+router.get('/placement-prediction', auth, reportController.getPlacementPrediction);
 
 module.exports = router;

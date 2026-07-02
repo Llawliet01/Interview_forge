@@ -15,7 +15,10 @@ import {
   ClipboardList,
   UploadCloud,
   Layers,
-  BookOpen
+  BookOpen,
+  Lock,
+  Check,
+  BrainCircuit
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -34,6 +37,8 @@ export default function DashboardPage() {
   const isLight = theme === 'light';
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [placementData, setPlacementData] = useState(null);
+  const [placementLoading, setPlacementLoading] = useState(true);
   const [stats, setStats] = useState({
     taken: 0,
     avgScore: 0,
@@ -43,6 +48,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchDashboardData();
+    fetchPlacementPrediction();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -57,6 +63,21 @@ export default function DashboardPage() {
       console.error('Failed to load dashboard statistics:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPlacementPrediction = async () => {
+    try {
+      setPlacementLoading(true);
+      const res = await apiRequest('/report/placement-prediction');
+      if (res.ok) {
+        const data = await res.json();
+        setPlacementData(data);
+      }
+    } catch (error) {
+      console.error('Failed to load placement prediction:', error);
+    } finally {
+      setPlacementLoading(false);
     }
   };
 
@@ -244,52 +265,172 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
-        {/* Setup Guidelines */}
+        {/* AI Placement Readiness Widget */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.35 }}
-          className={`rounded-2xl p-5 space-y-5 flex flex-col justify-between border shadow-md ${
+          className={`rounded-2xl p-5 border shadow-md flex flex-col justify-between ${
             isLight
-              ? 'bg-white border-slate-200'
-              : 'bg-[#2b1542]/80 border-[#552a82]/35'
+              ? 'bg-white border-slate-200 text-black'
+              : 'bg-[#2b1542]/80 border-[#552a82]/35 text-white'
           }`}
         >
-          <div className="space-y-4">
-            <h3 className={`text-sm font-extrabold ${isLight ? 'text-black' : 'text-white'}`}>Setup Guidelines</h3>
-            <div className="space-y-3">
-              {[
-                { num: '01', title: 'Upload Resume PDF', desc: 'Let our parser extract skills and projects to customize questions.', href: '/dashboard/resume', icon: UploadCloud, color: 'text-[#ffd60a]' },
-                { num: '02', title: 'Generate Mock Trial', desc: 'Select your role and difficulty inside Setup.', href: '/dashboard/setup', icon: Sparkles, color: 'text-[#ffd60a]' },
-                { num: '03', title: 'Run & Compile Code', desc: 'Write solutions in Monaco and test assertions.', href: '#', icon: Terminal, color: 'text-[#ffd60a]' },
-                { num: '04', title: 'Read Study Roadmap', desc: 'Work on weak domains using study calendar guides.', href: '/dashboard/roadmaps', icon: BookOpen, color: 'text-[#ffd60a]' },
-              ].map((step) => (
-                <div key={step.num} className="flex items-start gap-3 group cursor-default">
-                  <div className={`p-1.5 rounded-lg border shrink-0 mt-0.5 ${
-                    isLight ? 'bg-slate-100 border-slate-200 text-black' : 'bg-[#391c57] border-[#552a82]/30 text-[#ffd60a]'
-                  }`}>
-                    <step.icon className="h-3 w-3" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <h4 className={`font-bold text-xs ${isLight ? 'text-black' : 'text-white'}`}>{step.title}</h4>
-                    <p className={`text-[10px] leading-normal ${isLight ? 'text-slate-500' : 'text-blue-200'}`}>{step.desc}</p>
-                  </div>
-                </div>
-              ))}
+          {placementLoading ? (
+            <div className="flex-1 flex flex-col items-center justify-center p-6 text-xs text-blue-200">
+              <BrainCircuit className="h-8 w-8 text-primary animate-pulse mb-3" />
+              <span>Analyzing profile metrics...</span>
             </div>
-          </div>
+          ) : placementData && placementData.unlocked ? (
+            // UNLOCKED STATE
+            <div className="space-y-4 flex-1 flex flex-col justify-between">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <h3 className={`text-sm font-extrabold ${isLight ? 'text-black' : 'text-white'}`}>Placement Probability</h3>
+                  <span className={`px-2 py-0.5 rounded font-bold uppercase text-[9px] border ${
+                    placementData.prediction.color === 'green'
+                      ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                      : placementData.prediction.color === 'orange'
+                      ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
+                      : 'bg-red-500/10 border-red-500/30 text-red-400'
+                  }`}>
+                    {placementData.prediction.tier}
+                  </span>
+                </div>
+                <p className={`text-[11px] leading-normal ${isLight ? 'text-slate-500' : 'text-blue-200'}`}>
+                  Random Forest SDE readiness score based on platform performance metrics.
+                </p>
+              </div>
 
-          <Link
-            href="/dashboard/resume"
-            className={`w-full inline-flex items-center justify-between rounded-xl p-3 text-xs font-semibold border transition-all group ${
-              isLight
-                ? 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                : 'bg-[#391c57] border-[#552a82]/30 text-blue-200 hover:text-white hover:bg-[#552a82]/40'
-            }`}
-          >
-            <span>Upload Resume first</span>
-            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-all ${isLight ? 'text-slate-400 group-hover:text-slate-900' : 'text-blue-300 group-hover:text-white'}`} />
-          </Link>
+              {/* Radial Score Gauge */}
+              <div className="flex items-center justify-center relative my-2">
+                <svg className="w-24 h-24 transform -rotate-90">
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="36"
+                    className={isLight ? 'stroke-slate-100' : 'stroke-[#211033]'}
+                    strokeWidth="8"
+                    fill="transparent"
+                  />
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="36"
+                    className={`stroke-current ${
+                      placementData.prediction.color === 'green'
+                        ? 'text-green-500'
+                        : placementData.prediction.color === 'orange'
+                        ? 'text-orange-500'
+                        : 'text-red-500'
+                    }`}
+                    strokeWidth="8"
+                    fill="transparent"
+                    strokeDasharray={226.2}
+                    strokeDashoffset={226.2 - (226.2 * placementData.prediction.placement_probability) / 100}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute text-center flex flex-col items-center justify-center">
+                  <span className={`text-lg font-black leading-none ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                    {placementData.prediction.placement_probability}%
+                  </span>
+                  <span className={`text-[8px] font-bold mt-0.5 ${isLight ? 'text-slate-400' : 'text-blue-300'}`}>READY</span>
+                </div>
+              </div>
+
+              {/* Dynamic recs */}
+              <div className={`p-3 rounded-xl border text-[10px] leading-relaxed ${
+                isLight ? 'bg-slate-50 border-slate-200 text-slate-700' : 'bg-[#211033]/60 border-[#552a82]/20 text-blue-200'
+              }`}>
+                <div className="font-bold text-white mb-1 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 bg-[#ffd60a] rounded-full"></span>
+                  Priority focus: {placementData.prediction.bottleneck}
+                </div>
+                {placementData.prediction.recommendation}
+              </div>
+
+              <Link
+                href="/dashboard/setup"
+                className={`w-full inline-flex items-center justify-between rounded-xl p-3 text-xs font-semibold border transition-all group mt-2 ${
+                  isLight
+                    ? 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    : 'bg-[#391c57] border-[#552a82]/30 text-blue-200 hover:text-white hover:bg-[#552a82]/40'
+                }`}
+              >
+                <span>Improve readiness score</span>
+                <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-all ${isLight ? 'text-slate-400 group-hover:text-slate-900' : 'text-blue-300 group-hover:text-white'}`} />
+              </Link>
+            </div>
+          ) : (
+            // OPTION A: LOCKED STATE CHECKLIST
+            <div className="space-y-4 flex-1 flex flex-col justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <Lock className="h-4.5 w-4.5 text-[#ffd60a] shrink-0" />
+                  <h3 className={`text-sm font-extrabold ${isLight ? 'text-black' : 'text-white'}`}>Placement Predictor</h3>
+                </div>
+                <p className={`text-[10px] leading-normal ${isLight ? 'text-slate-500' : 'text-blue-200'}`}>
+                  Complete platform tasks to unlock your predictive placement probability rating.
+                </p>
+              </div>
+
+              <div className="space-y-2 my-2">
+                {[
+                  {
+                    done: placementData?.checklist?.resume || false,
+                    label: "Upload technical SDE resume",
+                    href: "/dashboard/resume",
+                    icon: UploadCloud
+                  },
+                  {
+                    done: placementData?.checklist?.coding || false,
+                    label: "Complete coding mock room",
+                    href: "/dashboard/setup",
+                    icon: Terminal
+                  },
+                  {
+                    done: placementData?.checklist?.speech || false,
+                    label: "Complete audio mock interview",
+                    href: "/dashboard/setup",
+                    icon: Sparkles
+                  }
+                ].map((item, idx) => (
+                  <Link
+                    key={idx}
+                    href={item.href}
+                    className={`flex items-center justify-between p-2.5 rounded-xl border text-[10px] transition-all ${
+                      item.done
+                        ? (isLight ? 'bg-green-50/50 border-green-200 text-green-800' : 'bg-green-950/20 border-green-800/20 text-green-300')
+                        : (isLight ? 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100' : 'bg-[#211033]/40 border-[#552a82]/10 text-blue-200 hover:bg-[#211033]')
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`p-1.5 rounded-lg border ${
+                        item.done 
+                          ? (isLight ? 'bg-green-100 border-green-200 text-green-700' : 'bg-green-900/40 border-green-800/40 text-green-400')
+                          : (isLight ? 'bg-slate-200 border-slate-300 text-slate-600' : 'bg-[#391c57] border-[#552a82]/20 text-blue-300')
+                      }`}>
+                        <item.icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="font-semibold">{item.label}</span>
+                    </div>
+                    {item.done ? (
+                      <Check className="h-4.5 w-4.5 text-green-500 shrink-0" />
+                    ) : (
+                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:translate-x-1 transition-all" />
+                    )}
+                  </Link>
+                ))}
+              </div>
+
+              <div className={`p-2.5 rounded-xl text-[9px] text-center ${
+                isLight ? 'bg-slate-50 text-slate-500' : 'bg-[#211033] text-blue-300/80'
+              }`}>
+                Requires at least 1 mock session & 1 parsed resume to run regression predictions.
+              </div>
+            </div>
+          )}
         </motion.div>
       </div>
 
